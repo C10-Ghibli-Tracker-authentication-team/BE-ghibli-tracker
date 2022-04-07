@@ -1,4 +1,21 @@
+const store = require('./store');
 
+
+async function addMovie(movie){
+    try{
+        return await store.addMovie(movie)
+    }catch(error){
+        throw new Error('No se pudieron obtener los datos')
+    }
+}
+
+async function listMovies(){
+    try{
+        return await store.getMovies()
+    }catch(error){
+        throw new Error('No se pudieron obtener los datos')
+    }
+}
 
 function addScore(user, score, movie) {
     
@@ -24,6 +41,8 @@ function deleteScore(user, score, movie) {
 }
 
 module.exports = {
+    listMovies,
+    addMovie,
     addScore,
     deleteScore,
 };

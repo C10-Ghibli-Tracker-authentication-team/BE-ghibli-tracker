@@ -15,3 +15,11 @@ To run this project, you will need to add the following environment variables to
 `MONGOATLAS_PASSWORD`
 
 `MONGOATLAS_APPNAME`
+
+`NODE_ENV`
+
+`HOST` 
+
+`PORT` 
+
+`JWT_SECRET` 

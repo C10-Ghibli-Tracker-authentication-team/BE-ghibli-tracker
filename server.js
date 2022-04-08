@@ -13,5 +13,5 @@ router(app);
 
 app.use('/app', express.static('public'));   //servir estáticos desde la carpeta public
 
-app.listen(3000);
-console.log('La aplicacion esta escuchando en el puerto 3000');
+app.listen(process.env.PORT);
+console.log(`La aplicacion esta escuchando en el puerto ${process.env.PORT}`);

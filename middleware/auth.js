@@ -21,9 +21,10 @@ async function authenticate(req, res, next) {
   })
   
   if(!user._id){
-    response.error(req, res, 'No se pudo autenticar', 400, 'El _id no se encuentra en el token')
+    return response.error(req, res, 'No se pudo autenticar', 400, 'El _id no se encuentra en el token')
   }
-
+  
+  req.user = user;
   next();
 }
 

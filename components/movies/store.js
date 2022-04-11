@@ -7,7 +7,7 @@ async function addMovie(movie) {
     newMovie.save()
   } catch (error) {
     console.log(error)
-    throw new Error('Unexpected error')
+    throw ('Unexpected error')
   }
 }
 
@@ -67,7 +67,7 @@ async function getMovies() {
     }
     ])
   } catch (error) {
-    throw new Error('Unexpected error')
+    throw('Unexpected error')
   }
 }
 

@@ -44,7 +44,7 @@ async function addScore(emojiScore) {
 
   } catch (error) {
     console.log(error)
-    throw new Error('Unexpected error')
+    throw ('Unexpected error')
   }
 }
 

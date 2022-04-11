@@ -8,7 +8,7 @@ router.post('/', async function(req, res){
     await controller.addEmojiScore(req.body)
     response.success(req, res, req.body, 201)
   }catch(error){
-      response.error(req, res, 'Unexpected Error', 400, error)
+      response.error(req, res, error, 400)
   }
 })
 

@@ -6,13 +6,13 @@ const bcrypt = require('bcrypt')
 async function addUser(user) {
     try {
         if (!user.userName || !user.password) {
-            throw new Error('No se ingresaron los datos correctos')
+            throw ('No se ingresaron los datos correctos')
         }
 
         const findUser = await store.getUser(user)
 
         if (findUser) {
-            throw new Error('Este usuario ya existe')
+            throw ('Este usuario ya existe')
         }
 
         const newUser = await store.addUser(user)
@@ -30,26 +30,26 @@ async function addUser(user) {
         return data = { token }
     } catch (error) {
         console.log(error)
-        throw new Error('Datos incorrectos')
+        throw (error)
     }
 }
 
 async function findUser(user){
     try{
         if(!user.userName || !user.password){
-            throw new Error('No se ingresaron los datos correctos')
+            throw ('No se ingresaron los datos correctos')
         }
 
         const userFind = await store.getUser(user)
 
         if(!userFind){
-            throw new Error('Este usuario no existe')
+            throw ('Este usuario no existe')
         }
 
         const valid = await bcrypt.compare(user.password, userFind.password)
 
         if(!valid){
-            throw new Error('Contraseña incorrecta')
+            throw ('Contraseña incorrecta')
         }
 
         const token = jsonwebtoken.sign(
@@ -65,11 +65,45 @@ async function findUser(user){
         return data = { token }
     }catch(error){
         console.log(error)
-        throw new Error('Datos incorrectos')
+        throw('Datos incorrectos')
+    }
+}
+
+async function updateUser(user, password, profilePic){
+    try{
+       
+        if(!profilePic && !password){
+            throw ('No se ingresaron los datos correctos')
+        }
+
+        if(profilePic){
+            var profilePicUrl = 'http://localhost:3000/app/files/' + profilePic.filename
+        }
+
+        const data = {
+            profilePic: profilePicUrl ? profilePicUrl : profilePic,
+            password: password ? await bcrypt.hash(password, 10) : password
+        }
+
+        const updatedUser = await store.updateUser(user, data)
+        const token = jsonwebtoken.sign(
+            {
+                _id: updatedUser._id,
+                userName: updatedUser.userName,
+                profilePic: updatedUser.profilePic
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '365d' }
+        )
+        return userToken = { token }      
+    }catch{
+        console.log(error)
+        throw ('Datos incorrectos')
     }
 }
 
 module.exports = {
     addUser,
-    findUser
+    findUser,
+    updateUser
 };

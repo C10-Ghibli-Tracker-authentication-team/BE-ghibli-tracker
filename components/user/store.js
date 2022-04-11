@@ -28,7 +28,23 @@ async function getUser({ userName }) {
   }
 }
 
+async function updateUser(user, data){
+
+  const updatedUser = await Model.findOneAndUpdate(
+    {
+      '_id': user._id,
+    },
+    {
+      $set: data,
+    },
+    {new: true}
+  )
+
+  return updatedUser;
+}
+
 module.exports = {
   addUser,
-  getUser
+  getUser, 
+  updateUser
 }

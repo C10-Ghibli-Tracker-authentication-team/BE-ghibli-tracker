@@ -11,7 +11,9 @@ db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWO
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
+app.use(passport.session());
 router(app);
 
 app.use('/app', express.static('public'));   //servir estáticos desde la carpeta public

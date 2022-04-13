@@ -12,21 +12,9 @@ const FacebookStrategy = new Strategy(
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: url,
-    profileFields: ['id', 'email', 'link', 'locale', 'name',
-      'timezone', 'updated_time', 'verified', 'displayName']
+    profileFields: ['id', 'email', 'name', 'displayName']
   },
   function (token, tokenSecret, profile, done) {
-    let url = "https://graph.facebook.com/v3.2/me?" +
-      "fields=id,name,email,first_name,last_name&access_token=" + token;
-
-    request({
-      url: url,
-      json: true
-    }, function (err, response, body) {
-      let email = body.email;  // body.email contains your email
-      console.log(body);
-    });
-
     return done(null, profile);
   }
 );

@@ -37,7 +37,9 @@ async function addScore(emojiScore, user) {
         },
         {
           $push:{
-            newScore
+            emojiScores : {
+              ...newScore
+            }
           },
           $inc: {
             cantEmojiScore: 1

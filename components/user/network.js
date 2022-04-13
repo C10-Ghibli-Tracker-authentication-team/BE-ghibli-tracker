@@ -13,7 +13,7 @@ const upload = multer({
 auth.get('/auth/facebook', passport.authenticate('facebook'));
 
 auth.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { session: false, scope:['public_profile', 'email'] }),
+  passport.authenticate('facebook', { session: false , authType: 'rerequest', scope:['public_profile', 'email'] }),
   async function(req, res) {
    try{
     response.success(req, res, req.user)

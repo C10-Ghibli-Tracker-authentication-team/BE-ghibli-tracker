@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.post('/', async function(req, res){
   try{
-    await controller.addEmojiScore(req.body)
-    response.success(req, res, req.body, 201)
+    const score = await controller.addEmojiScore(req.body, req.user)
+    response.success(req, res,score, 201)
   }catch(error){
       response.error(req, res, error, 400)
   }

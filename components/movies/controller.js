@@ -20,6 +20,4 @@ async function listMovies(){
 module.exports = {
     listMovies,
     addMovie,
-    addScore,
-    deleteScore,
 };

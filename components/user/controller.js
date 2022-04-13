@@ -3,73 +3,69 @@ const jsonwebtoken = require('jsonwebtoken');
 require('dotenv').config();
 const bcrypt = require('bcrypt')
 
-async function addUser(user) {
+async function addUser(newUser) {
     try {
-        if (!user.userName || !user.password) {
+        if (!newUser.userName || !newUser.password) {
             throw ('No se ingresaron los datos correctos')
         }
 
-        const findUser = await store.getUser(user)
+        const findUser = await store.getUser(newUser)
 
         if (findUser) {
             throw ('Este usuario ya existe')
         }
 
-        const newUser = await store.addUser(user)
-
+        const user = await store.addUser(newUser)
+        delete user._doc.password
         const token = jsonwebtoken.sign(
             {
-                _id: newUser._id,
-                userName: newUser.userName,
-                profilePic: newUser.profilePic
+                _id: user._id,
             },
             process.env.JWT_SECRET,
-            { expiresIn: '365d' }
+            { expiresIn: '2d' }
         )
 
-        return data = { token }
+        return data = { user, token }
     } catch (error) {
         console.log(error)
         throw (error)
     }
 }
 
-async function findUser(user){
+async function findUser(userFind){
     try{
-        if(!user.userName || !user.password){
+        if(!userFind.userName || !userFind.password){
             throw ('No se ingresaron los datos correctos')
         }
 
-        const userFind = await store.getUser(user)
+        let user = await store.getUser(userFind)
 
-        if(!userFind){
+        if(!user){
             throw ('Este usuario no existe')
         }
 
-        const valid = await bcrypt.compare(user.password, userFind.password)
-
+        const valid = await bcrypt.compare(userFind.password, user.password)
+        
         if(!valid){
-            throw ('Contraseña incorrecta')
+            throw ('Datos incorrectos')
         }
-
+        delete user._doc.password
         const token = jsonwebtoken.sign(
             {
-                _id: userFind._id,
-                userName: userFind.userName,
-                profilePic: userFind.profilePic
+                _id: user._id,
             },
             process.env.JWT_SECRET,
-            { expiresIn: '365d' }
+            { expiresIn: '2d' }
         )
 
-        return data = { token }
+        return data = { user, token }
     }catch(error){
         console.log(error)
         throw('Datos incorrectos')
     }
 }
 
-async function updateUser(user, password, profilePic){
+async function updateUser(updatedUser, password, profilePic){
     try{
        
         if(!profilePic && !password){
@@ -85,17 +81,9 @@ async function updateUser(user, password, profilePic){
             password: password ? await bcrypt.hash(password, 10) : password
         }
 
-        const updatedUser = await store.updateUser(user, data)
-        const token = jsonwebtoken.sign(
-            {
-                _id: updatedUser._id,
-                userName: updatedUser.userName,
-                profilePic: updatedUser.profilePic
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: '365d' }
-        )
-        return userToken = { token }      
+        const user = await store.updateUser(updatedUser, data)
+        delete user._doc.password
+        return userToken = { user }      
     }catch{
         console.log(error)
         throw ('Datos incorrectos')

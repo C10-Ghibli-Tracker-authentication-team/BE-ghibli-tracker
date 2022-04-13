@@ -4,9 +4,23 @@ const response = require('../../network/response');
 const controller = require('./controller');
 const auth = express.Router();
 const user = express.Router();
+const passport = require('passport');
 const upload = multer({
     dest: 'public/files/'
 })
+
+
+auth.get('/auth/facebook', passport.authenticate('facebook'));
+
+auth.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { session: false }),
+  async function(req, res) {
+   try{
+    response.success(req, res, req.user)
+   }catch(error){
+    response.error(req, res, `${error}`, 500)
+   }    
+});
 
 auth.post('/signup', async function (req, res) {
     try {

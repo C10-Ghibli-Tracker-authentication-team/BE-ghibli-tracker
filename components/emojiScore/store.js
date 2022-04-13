@@ -1,35 +1,43 @@
 const Model = require('./model')
 
 
-async function addScore(emojiScore) {
-  try {
+async function addScore(emojiScore, user) {
+  //Creando objeto Score
+  const newScore = {
+    'userId': user._id,
+    'score': emojiScore.score,
+  }
 
+  try {
+    //Existe un score para esta pelicula y usuario
     const findScore = await Model.exists({
       'movieId': emojiScore.movieId,
-      'emojiScores': { $elemMatch: { userId: emojiScore.emojiScores.userId } }
+      'emojiScores': { $elemMatch: { userId: newScore.userId } }
     });
+    console.log(findScore)
+    //Actualiza el score para esta pelicula y usuario si ya existe
     if (findScore) {     
       await Model.updateOne(
         {
           'movieId': emojiScore.movieId,
-          'emojiScores': { $elemMatch: { userId: emojiScore.emojiScores.userId } }
+          'emojiScores': { $elemMatch: { userId: newScore.userId } }
         },
         {
           $set: {
-            "emojiScores.$.score": emojiScore.emojiScores.score,
+            "emojiScores.$.score": newScore.score,
           },
-        }
+        },
+        {new: true}
       )
-    } else {
-      const newScore = await Model.updateOne({
+    }
+    //Crea un nuevo score para esta pelicula si no existe
+    else {
+      await Model.updateOne({
         'movieId': emojiScore.movieId
         },
         {
           $push:{
-            emojiScores: {
-              userId:emojiScore.emojiScores.userId,
-              score: emojiScore.emojiScores.score,
-            }
+            newScore
           },
           $inc: {
             cantEmojiScore: 1
@@ -39,11 +47,10 @@ async function addScore(emojiScore) {
         new:true,
         upsert:true
       })
-      console.log(newScore)
     }
 
+    return newScore
   } catch (error) {
-    console.log(error)
     throw ('Unexpected error')
   }
 }

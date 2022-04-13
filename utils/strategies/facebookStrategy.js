@@ -11,6 +11,8 @@ const FacebookStrategy = new Strategy(
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: url,
+    profileFields:['id', 'emails', 'link', 'locale', 'name',
+    'timezone', 'updated_time', 'verified', 'displayName']
   },
   function (token, tokenSecret, profile, done) {
     return done(null, profile);

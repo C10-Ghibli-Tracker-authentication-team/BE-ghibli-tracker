@@ -1,4 +1,4 @@
-const mongoose = requrie('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const scoreSchema = new Schema({
@@ -6,17 +6,17 @@ const scoreSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Movies'
   },
-  scores : [{
+  starScores : [{
     userId: {
       type: Schema.ObjectId,
       ref: 'User',
     },
     score: {
-      type: String,
+      type: Number,
       required: true,
     }
   }],
-  totalScore: String,
+  cantStarScore: Number
 })
 
 

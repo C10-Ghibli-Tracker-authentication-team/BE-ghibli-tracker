@@ -22,7 +22,17 @@ const TwitterStrategy = new Strategy(
     includeEmail: true
   },
   function (token, tokenSecret, profile, done) {
-    return done(null, profile);
+    const newUser = { 
+      id: profile._json.id_str,
+      email: profile._json.email,
+      name: profile._json.name,
+      picture:{
+        data : {
+          url: profile._json.profile_image_url
+        }
+      }
+    }
+    return done(null, newUser);
   }
 );
 

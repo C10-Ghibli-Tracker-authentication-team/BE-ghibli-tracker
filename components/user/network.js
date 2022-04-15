@@ -10,13 +10,14 @@ const upload = multer({
 })
 
 
-auth.get('/auth/facebook', passport.authenticate('facebook'));
+auth.get('/auth/facebook', passport.authenticate('facebook', {scope: ['public_profile', 'email']}));
 
 auth.get('/auth/facebook/callback',
     passport.authenticate('facebook', { session: false, authType: 'rerequest', scope: ['public_profile', 'email'] }),
     async function (req, res) {
         try {
-            response.success(req, res, req.user._json)
+            const data = await controller.findOrCreate(req.user._json)
+            response.success(req, res, data)
         } catch (error) {
             response.error(req, res, `${error}`, 500)
         }
@@ -26,11 +27,10 @@ auth.get('/auth/twitter', passport.authenticate('twitter'));
 
 auth.get('/auth/twitter/callback',
     passport.authenticate('twitter'),
-    function (req, res) {
-        console.log(req)
-        // Successful authentication, redirect home.
+    async function (req, res) {
         try {
-            response.success(req, res, req.user._json)
+            const data = await controller.findOrCreate(req.user)
+            response.success(req, res, data)
         } catch (error) {
             response.error(req, res, `${error}`, 500)
         }

@@ -32,21 +32,21 @@ async function addUser(newUser) {
     }
 }
 
-async function findUser(userFind){
-    try{
-        if(!userFind.userName || !userFind.password){
+async function findUser(userFind) {
+    try {
+        if (!userFind.userName || !userFind.password) {
             throw ('No se ingresaron los datos correctos')
         }
 
         let user = await store.getUser(userFind)
 
-        if(!user){
+        if (!user) {
             throw ('Este usuario no existe')
         }
 
         const valid = await bcrypt.compare(userFind.password, user.password)
-        
-        if(!valid){
+
+        if (!valid) {
             throw ('Datos incorrectos')
         }
         delete user._doc.password
@@ -59,20 +59,20 @@ async function findUser(userFind){
         )
 
         return data = { user, token }
-    }catch(error){
+    } catch (error) {
         console.log(error)
-        throw('Datos incorrectos')
+        throw ('Datos incorrectos')
     }
 }
 
-async function updateUser(updatedUser, password, profilePic){
-    try{
-       
-        if(!profilePic && !password){
+async function updateUser(updatedUser, password, profilePic) {
+    try {
+
+        if (!profilePic && !password) {
             throw ('No se ingresaron los datos correctos')
         }
 
-        if(profilePic){
+        if (profilePic) {
             var profilePicUrl = 'http://localhost:3000/app/files/' + profilePic.filename
         }
 
@@ -83,15 +83,46 @@ async function updateUser(updatedUser, password, profilePic){
 
         const user = await store.updateUser(updatedUser, data)
         delete user._doc.password
-        return userToken = { user }      
-    }catch{
+        return userToken = { user }
+    } catch {
         console.log(error)
         throw ('Datos incorrectos')
+    }
+}
+
+async function findOrCreate(userFind) {
+    try {
+        let user = await store.getUser({ userName: userFind.email })
+        if (!user) {
+            const newUser = {
+                userName: userFind.email,
+                profilePic: userFind.picture.data.url
+            }
+            user = await store.addUser(newUser)
+        }
+
+        if(user.password){
+            delete user._doc.password
+        }
+
+        const token = jsonwebtoken.sign(
+            {
+                _id: user._id,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '2d' }
+        )
+        return data = { user, token }
+
+    } catch(error){
+        console.log(error)
+        throw (error)
     }
 }
 
 module.exports = {
     addUser,
     findUser,
-    updateUser
+    updateUser,
+    findOrCreate
 };

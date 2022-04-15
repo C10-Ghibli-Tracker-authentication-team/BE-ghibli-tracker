@@ -1,14 +1,12 @@
 const Model = require('./model')
 const bcrypt = require('bcrypt')
 
-async function addUser({ userName, password }) {
+async function addUser({ userName, password, profilePic }) {
   try {
-    const profilePic = `${process.env.HOST}:${process.env.PORT}/app/files/default_image.jpeg`
-
     const user = {
       userName,
-      password: await bcrypt.hash(password, 10),
-      profilePic
+      password: password && await bcrypt.hash(password, 10),
+      profilePic: profilePic ? profilePic : `${process.env.HOST}:${process.env.PORT}/app/files/default_image.jpeg`
     }
 
     const newUser = new Model(user)

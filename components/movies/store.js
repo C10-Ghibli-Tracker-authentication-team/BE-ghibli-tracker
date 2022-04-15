@@ -54,6 +54,9 @@ async function getMovies() {
       $addFields : {
         "totalEmojiScore": {
           $sum: "$emojiScores.score"
+        },
+        "totalStarScore": {
+          $sum: "$starScores.score"
         }
       }
     },
@@ -63,6 +66,9 @@ async function getMovies() {
         emojiScores:0,
         movieId:0,
         __v:0,
+        starscore:0,
+        starScores:0,
+
       }
     }
     ])

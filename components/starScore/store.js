@@ -14,6 +14,7 @@ async function addScore(starScore, user) {
       'movieId': starScore.movieId,
       'starScores': { $elemMatch: { userId: newScore.userId } }
     });
+
     //Actualiza el score para esta pelicula y usuario si ya existe
     if (findScore) {     
       await Model.updateOne(

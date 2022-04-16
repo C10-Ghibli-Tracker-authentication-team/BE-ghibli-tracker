@@ -25,7 +25,12 @@ async function addUser(newUser) {
             { expiresIn: '2d' }
         )
 
-        return data = { user, token }
+        return data = {
+            _id: user._id,
+            userName: user.userName,
+            profilePic: user.profilePic,
+            token
+        }
     } catch (error) {
         console.log(error)
         throw (error)
@@ -58,7 +63,12 @@ async function findUser(userFind) {
             { expiresIn: '2d' }
         )
 
-        return data = { user, token }
+        return data = {
+            _id: user._id,
+            userName: user.userName,
+            profilePic: user.profilePic,
+            token
+        }
     } catch (error) {
         console.log(error)
         throw ('Datos incorrectos')
@@ -83,7 +93,11 @@ async function updateUser(updatedUser, password, profilePic) {
 
         const user = await store.updateUser(updatedUser, data)
         delete user._doc.password
-        return userToken = { user }
+        return newData = {
+            _id: user._id,
+            userName: user.userName,
+            profilePic: user.profilePic
+        }
     } catch {
         console.log(error)
         throw ('Datos incorrectos')
@@ -101,7 +115,7 @@ async function findOrCreate(userFind) {
             user = await store.addUser(newUser)
         }
 
-        if(user.password){
+        if (user.password) {
             delete user._doc.password
         }
 
@@ -112,13 +126,19 @@ async function findOrCreate(userFind) {
             process.env.JWT_SECRET,
             { expiresIn: '2d' }
         )
-        return data = { user, token }
+        return data = {
+            _id: user._id,
+            userName: user.userName,
+            profilePic: user.profilePic,
+            token
+        }
 
-    } catch(error){
+    } catch (error) {
         console.log(error)
         throw (error)
     }
 }
+
 
 module.exports = {
     addUser,

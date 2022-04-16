@@ -1,5 +1,6 @@
-const passport = require('passport');
-const facebookStrategy = require('./facebookStrategy');
-const twitterStrategy = require('./twitterStrategy');
+import passport from 'passport';
+import facebookStrategy from './facebookStrategy';
+import twitterStrategy from './twitterStrategy';
+
 passport.use(facebookStrategy);
 passport.use(twitterStrategy);

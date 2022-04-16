@@ -1,15 +1,16 @@
-const express = require('express');
-const response = require('../../network/response')
-const controller = require("./controller")
+import express from 'express';
+import { success, error as _error } from '../../network/response';
+import addEmojiScore from './controller';
+
 const router = express.Router();
 
-router.post('/', async function(req, res){
-  try{
-    const score = await controller.addEmojiScore(req.body, req.user)
-    response.success(req, res,score, 201)
-  }catch(error){
-      response.error(req, res, error, 400)
+router.post('/', async (req, res) => {
+  try {
+    const score = await addEmojiScore(req.body, req.user);
+    success(req, res, score, 201);
+  } catch (error) {
+    _error(req, res, error, 400, error);
   }
-})
+});
 
-module.exports = router;
+export default router;

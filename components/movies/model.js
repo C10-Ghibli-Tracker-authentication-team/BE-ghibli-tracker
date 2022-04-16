@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const movieSchema = new Schema({
   title: {
@@ -11,7 +12,7 @@ const movieSchema = new Schema({
     required: true,
   },
   originalTitleRomanised: String,
-  imageUrl:  {
+  imageUrl: {
     type: String,
     required: true,
   },
@@ -38,8 +39,8 @@ const movieSchema = new Schema({
   releaseDate: {
     type: String,
     required: true,
-  }
+  },
 });
 
 const model = mongoose.model('Movies', movieSchema);
-module.exports = model;
+export default model;

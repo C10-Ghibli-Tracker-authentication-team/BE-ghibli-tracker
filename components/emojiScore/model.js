@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const scoreSchema = new Schema({
   movieId: {
     type: Schema.ObjectId,
-    ref: 'Movies'
+    ref: 'Movies',
   },
-  emojiScores : [{
+  emojiScores: [{
     userId: {
       type: Schema.ObjectId,
       ref: 'User',
@@ -14,12 +15,11 @@ const scoreSchema = new Schema({
     score: {
       type: Number,
       required: true,
-    }
+    },
   }],
   totalEmojiScore: Number,
-  cantEmojiScore: Number
-})
-
+  cantEmojiScore: Number,
+});
 
 const model = mongoose.model('EmojiScore', scoreSchema);
-module.exports = model;
+export default model;

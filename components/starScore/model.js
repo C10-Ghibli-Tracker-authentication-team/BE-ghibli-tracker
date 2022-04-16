@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const scoreSchema = new Schema({
   movieId: {
     type: Schema.ObjectId,
-    ref: 'Movies'
+    ref: 'Movies',
   },
-  starScores : [{
+  starScores: [{
     userId: {
       type: Schema.ObjectId,
       ref: 'User',
@@ -14,11 +15,10 @@ const scoreSchema = new Schema({
     score: {
       type: Number,
       required: true,
-    }
+    },
   }],
-  cantStarScore: Number
-})
+  cantStarScore: Number,
+});
 
-
-const model = mongoose.model('StarScore', scoreSchema);
-module.exports = model;
+const Model = mongoose.model('StarScore', scoreSchema);
+export default Model;

@@ -1,32 +1,32 @@
-const Model = require('./model')
+import Model from './model';
 
 async function getMovieById(movieID) {
   try {
     const movie = await Model.findById(movieID);
     return movie._doc;
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 }
 
 async function existMovie(movieID) {
   try {
-    const exist = await Model.exists({ '_id': movieID });
+    const exist = await Model.exists({ _id: movieID });
     return exist;
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 }
 
 async function addMovie(movie) {
   try {
-    const newMovie = new Model(movie)
-    newMovie.save()
+    const newMovie = new Model(movie);
+    newMovie.save();
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 }
 
@@ -38,46 +38,46 @@ async function getMovies() {
           from: 'starscores',
           localField: '_id',
           foreignField: 'movieId',
-          as: 'starscore'
-        }
+          as: 'starscore',
+        },
       },
       {
         $replaceRoot: {
           newRoot:
           {
             $mergeObjects: [
-              { $arrayElemAt: ['$starscore', 0] }, "$$ROOT"
-            ]
-          }
-        }
+              { $arrayElemAt: ['$starscore', 0] }, '$$ROOT',
+            ],
+          },
+        },
       },
       {
         $lookup: {
           from: 'emojiscores',
           localField: '_id',
           foreignField: 'movieId',
-          as: 'emojiscore'
-        }
+          as: 'emojiscore',
+        },
       },
       {
         $replaceRoot: {
           newRoot:
           {
             $mergeObjects: [
-              { $arrayElemAt: ['$emojiscore', 0] }, "$$ROOT"
-            ]
-          }
-        }
+              { $arrayElemAt: ['$emojiscore', 0] }, '$$ROOT',
+            ],
+          },
+        },
       },
       {
         $addFields: {
-          "totalEmojiScore": {
-            $sum: "$emojiScores.score"
+          totalEmojiScore: {
+            $sum: '$emojiScores.score',
           },
-          "totalStarScore": {
-            $sum: "$starScores.score"
-          }
-        }
+          totalStarScore: {
+            $sum: '$starScores.score',
+          },
+        },
       },
       {
         $project:
@@ -89,18 +89,17 @@ async function getMovies() {
           starscore: 0,
           starScores: 0,
 
-        }
-      }
-    ])
+        },
+      },
+    ]);
   } catch (error) {
-    throw ('Unexpected error')
+    throw ('Unexpected error');
   }
 }
 
-
-module.exports = {
+export {
   addMovie,
   getMovieById,
   getMovies,
-  existMovie
-}
+  existMovie,
+};

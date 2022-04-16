@@ -1,40 +1,39 @@
-const passport = require('passport');
-const { Strategy } = require('passport-twitter');
+import passport from 'passport';
+import { Strategy } from 'passport-twitter';
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-let url = ''
+let url = '';
 if (process.env.NODE_ENV === 'development') {
-  url = `http://${process.env.HOST}:${process.env.PORT}/auth/twitter/callback`
+  url = `http://${process.env.HOST}:${process.env.PORT}/auth/twitter/callback`;
 } else {
-  url = `https://${process.env.HOST}/auth/twitter/callback`
+  url = `https://${process.env.HOST}/auth/twitter/callback`;
 }
 const TwitterStrategy = new Strategy(
   {
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
     callbackURL: url,
-    includeEmail: true
+    includeEmail: true,
   },
-  function (token, tokenSecret, profile, done) {
-    const newUser = { 
+  ((token, tokenSecret, profile, done) => {
+    const newUser = {
       id: profile._json.id_str,
       email: profile._json.email,
       name: profile._json.name,
-      picture:{
-        data : {
-          url: profile._json.profile_image_url
-        }
-      }
-    }
+      picture: {
+        data: {
+          url: profile._json.profile_image_url,
+        },
+      },
+    };
     return done(null, newUser);
-  }
+  }),
 );
 
-
-module.exports = TwitterStrategy;
+export default TwitterStrategy;

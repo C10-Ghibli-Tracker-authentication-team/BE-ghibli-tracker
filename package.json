@@ -4,7 +4,11 @@
   "description": "Proyecto Backend de Platzi Master",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel server.js -d dist",
+    "start": "nodemon --exec babel-node server.js",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix"
   },
   "author": "Cesar Velasquez, Juan Martinez",
   "license": "MIT",
@@ -19,9 +23,19 @@
     "multer": "^1.4.4",
     "passport": "^0.5.2",
     "passport-facebook": "^3.0.0",
-    "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.4",
-    "passport-twitter-oauth2": "^2.1.1",
-    "request": "^2.88.2"
+    "passport-twitter": "^1.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.9",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.2"
   }
 }

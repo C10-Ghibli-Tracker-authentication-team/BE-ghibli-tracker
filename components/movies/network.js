@@ -1,43 +1,45 @@
-const express = require('express');
-const response = require('../../network/response');
-const controller = require('./controller')
+import express from 'express';
+import { success, error as _error } from '../../network/response';
+import {
+  addMovie, getMovie, listMovies, likeMovie,
+} from './controller';
 
 const router = express.Router();
 
-router.post('/', async function(req, res){
-    try{
-        await controller.addMovie(req.body)
-        response.success(req, res, req.body, 201)
-    }catch(error){
-        response.error(req, res, error, 400)
-    }
+router.post('/', async (req, res) => {
+  try {
+    await addMovie(req.body);
+    success(req, res, req.body, 201);
+  } catch (error) {
+    _error(req, res, error, 400);
+  }
 });
 
-router.get('/:id', async function(req, res) {
-    try{
-        const movieList = await controller.getMovie(req.user._id,req.params.id)
-        response.success(req, res, movieList, 200);
-    }catch(error){
-        response.error(req,res, error, 400)
-    }
+router.get('/:id', async (req, res) => {
+  try {
+    const movieList = await getMovie(req.user._id, req.params.id);
+    success(req, res, movieList, 200);
+  } catch (error) {
+    _error(req, res, error, 400);
+  }
 });
 
-router.get('/', async function(req, res) {
-    try{
-        const movieList = await controller.listMovies()
-        response.success(req, res, movieList, 200);
-    }catch(error){
-        response.error(req,res, error, 400)
-    }
+router.get('/', async (req, res) => {
+  try {
+    const movieList = await listMovies();
+    success(req, res, movieList, 200);
+  } catch (error) {
+    _error(req, res, error, 400);
+  }
 });
 
-router.post('/likeMovie', async function(req, res){
-    try{
-        const movie = await controller.likeMovie(req.user._id,req.body.movieId)
-        response.success(req, res, movie, 200);
-    }catch(error){
-        response.error(req,res, error, 400)
-    }
-})
+router.post('/likeMovie', async (req, res) => {
+  try {
+    const movie = await likeMovie(req.user._id, req.body.movieId);
+    success(req, res, movie, 200);
+  } catch (error) {
+    _error(req, res, error, 400);
+  }
+});
 
-module.exports = router;
+export default router;

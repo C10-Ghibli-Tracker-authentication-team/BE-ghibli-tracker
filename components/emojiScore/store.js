@@ -1,46 +1,47 @@
-const Model = require('./model')
+import model from './model';
 
 async function hasEmojiScore(emojiScore, user) {
   try {
-    const findScore = await Model.exists({
-      'movieId': emojiScore.movieId,
-      'emojiScores': { $elemMatch: { userId: user._id } }
+    const findScore = await model.exists({
+      movieId: emojiScore.movieId,
+      emojiScores: { $elemMatch: { userId: user._id } },
     });
     return findScore;
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 }
 
 async function addNewScore(emojiScore, user) {
-
   const newScore = {
-    'userId': user._id,
-    'score': emojiScore.score,
-  }
+    userId: user._id,
+    score: emojiScore.score,
+  };
 
   try {
-    await Model.updateOne({
-      'movieId': emojiScore.movieId
-    },
+    await model.updateOne(
+      {
+        movieId: emojiScore.movieId,
+      },
       {
         $push: {
           emojiScores: {
-            ...newScore
-          }
+            ...newScore,
+          },
         },
         $inc: {
-          cantEmojiScore: 1
-        }
+          cantEmojiScore: 1,
+        },
       },
       {
         new: true,
-        upsert: true
-      })
+        upsert: true,
+      },
+    );
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 
   return newScore;
@@ -48,45 +49,45 @@ async function addNewScore(emojiScore, user) {
 
 async function updateScore(emojiScore, user) {
   const newScore = {
-    'userId': user._id,
-    'score': emojiScore.score,
-  }
+    userId: user._id,
+    score: emojiScore.score,
+  };
   try {
-    await Model.updateOne(
+    await model.updateOne(
       {
-        'movieId': emojiScore.movieId,
-        'emojiScores': { $elemMatch: { userId: newScore.userId } }
+        movieId: emojiScore.movieId,
+        emojiScores: { $elemMatch: { userId: newScore.userId } },
       },
       {
         $set: {
-          "emojiScores.$.score": newScore.score,
+          'emojiScores.$.score': newScore.score,
         },
       },
-      { new: true }
-    )
+      { new: true },
+    );
   } catch (error) {
-    console.log(error)
-    throw ('Unexpected error')
+    console.log(error);
+    throw ('Unexpected error');
   }
 }
 
 async function getScoreByUser(movieID, userID) {
-  try{
-    const score = await Model.findOne({ movieId: movieID }).select({ emojiScores: { $elemMatch: { userId: userID } } })
-    if(score){
-      return score.emojiScores[0].score
+  try {
+    const score = await model.findOne({ movieId: movieID })
+      .select({ emojiScores: { $elemMatch: { userId: userID } } });
+    if (score) {
+      return score.emojiScores[0].score;
     }
-    return 0
-  }catch(error){
-    console.log(error)
-    throw ('Unexpected error')
+    return 0;
+  } catch (error) {
+    console.log(error);
+    throw ('Unexpected error');
   }
-  
 }
 
-module.exports = {
+export {
   hasEmojiScore,
   addNewScore,
   updateScore,
-  getScoreByUser
-}
+  getScoreByUser,
+};

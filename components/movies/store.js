@@ -3,7 +3,7 @@ const Model = require('./model')
 async function getMovieById(movieID) {
   try {
     const movie = await Model.findById(movieID);
-    return movie;
+    return movie._doc;
   } catch (error) {
     console.log(error)
     throw ('Unexpected error')

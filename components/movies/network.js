@@ -13,10 +13,19 @@ router.post('/', async function(req, res){
     }
 });
 
+router.get('/:id', async function(req, res) {
+    try{
+        const movieList = await controller.getMovie(req.user._id,req.params.id)
+        response.success(req, res, movieList, 200);
+    }catch(error){
+        response.error(req,res, error, 400)
+    }
+});
+
 router.get('/', async function(req, res) {
     try{
-        const moviesList = await controller.listMovies()
-        response.success(req, res, moviesList, 200);
+        const movieList = await controller.listMovies()
+        response.success(req, res, movieList, 200);
     }catch(error){
         response.error(req,res, error, 400)
     }

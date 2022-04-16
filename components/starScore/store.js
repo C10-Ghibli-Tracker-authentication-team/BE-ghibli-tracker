@@ -1,63 +1,92 @@
 const Model = require('./model')
 
+async function hasStarScore(starScore, user) {
+  try {
+    const findScore = await Model.exists({
+      'movieId': starScore.movieId,
+      'starScores': { $elemMatch: { userId: user._id } }
+    });
+    return findScore;
+  } catch (error) {
+    console.log(error)
+    throw ('Unexpected error')
+  }
+}
 
-async function addScore(starScore, user) {
-  //Creando objeto Score
+async function addNewScore(starScore, user) {
+
   const newScore = {
     'userId': user._id,
     'score': starScore.score,
   }
 
   try {
-    //Existe un score para esta pelicula y usuario
-    const findScore = await Model.exists({
-      'movieId': starScore.movieId,
-      'starScores': { $elemMatch: { userId: newScore.userId } }
-    });
-
-    //Actualiza el score para esta pelicula y usuario si ya existe
-    if (findScore) {     
-      await Model.updateOne(
-        {
-          'movieId': starScore.movieId,
-          'starScores': { $elemMatch: { userId: newScore.userId } }
-        },
-        {
-          $set: {
-            "starScores.$.score": newScore.score,
-          },
-        },
-        {new: true}
-      )
-    }
-    //Crea un nuevo score para esta pelicula si no existe
-    else {
-      await Model.updateOne({
-        'movieId': starScore.movieId
-        },
-        {
-          $push:{
-            starScores : {
-              ...newScore
-            }
-          },
-          $inc: {
-            cantStarScore: 1
+    await Model.updateOne({
+      'movieId': starScore.movieId
+    },
+      {
+        $push: {
+          starScores: {
+            ...newScore
           }
         },
+        $inc: {
+          cantStarScore: 1
+        }
+      },
       {
-        new:true,
-        upsert:true
+        new: true,
+        upsert: true
       })
-    }
-
-    return newScore
   } catch (error) {
+    console.log(error)
+    throw ('Unexpected error')
+  }
+
+  return newScore;
+}
+
+async function updateScore(starScore, user) {
+  const newScore = {
+    'userId': user._id,
+    'score': starScore.score,
+  }
+  try {
+    await Model.updateOne(
+      {
+        'movieId': starScore.movieId,
+        'starScores': { $elemMatch: { userId: newScore.userId } }
+      },
+      {
+        $set: {
+          "starScores.$.score": newScore.score,
+        },
+      },
+      { new: true }
+    )
+  } catch (error) {
+    console.log(error)
     throw ('Unexpected error')
   }
 }
 
+async function getScoreByUser(movieID, userID) {
+  try{
+    const score = await Model.findOne({ movieId: movieID }).select({ starScores: { $elemMatch: { userId: userID } } })
+    if(score){
+      return score.starScores[0].score
+    }
+    return 0
+  }catch(error){
+    console.log(error)
+    throw ('Unexpected error')
+  }
+  
+}
 
 module.exports = {
-  addScore
+  hasStarScore,
+  addNewScore,
+  updateScore,
+  getScoreByUser
 }

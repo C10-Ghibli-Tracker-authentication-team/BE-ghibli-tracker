@@ -9,22 +9,18 @@ async function authenticate(req, res, next) {
     return response.error(req, res, 'No se pudo autenticar', 400, 'Token no enviado')
   }
   
-  const user =  jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, user) => {
-    try {
-      if (err || !user) {
-        return response.error(req, res, 'No se pudo autenticar', 400, err)
-      }
-      return user;
-    } catch (error) {
-      return response.error(req, res, 'No se pudo autenticar', 400, 'Error interno al autenticar')
-    }
-  })
+  let userFind = ""
+  try{
+    userFind =  jsonwebtoken.verify(token, process.env.JWT_SECRET)
+  }catch(error){
+    return response.error(req, res, 'No se pudo autenticar', 400, 'Error interno al autenticar')
+  }
   
-  if(!user._id){
+  if(!userFind._id){
     return response.error(req, res, 'No se pudo autenticar', 400, 'El _id no se encuentra en el token')
   }
   
-  req.user = user;
+  req.user = userFind;
   next();
 }
 

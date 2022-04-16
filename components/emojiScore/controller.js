@@ -9,8 +9,8 @@ async function addEmojiScore(score, user){
         if(!movie){
             throw (`No se encontro una pelicula con este id  ${movieID}`)
         };
-        const hasStarScore = await store.hasStarScore(score,user)
-        if(hasStarScore){
+        const hasEmojiScore = await store.hasEmojiScore(score,user)
+        if(hasEmojiScore){
             await store.updateScore(score,user)
         } else{
             await store.addNewScore(score, user)

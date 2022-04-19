@@ -73,7 +73,7 @@ async function updateScore(starScore, user) {
 
 async function getScoreByUser(movieID, userID) {
   try {
-    const score = await Model.findOne({ movieId: movieID })
+    const score = await Model.findOne({ movieId: movieID, starScores: { $elemMatch: { userId: userID } } })
       .select({ starScores: { $elemMatch: { userId: userID } } });
     if (score) {
       return score.starScores[0].score;

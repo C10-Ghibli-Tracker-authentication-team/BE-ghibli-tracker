@@ -15,6 +15,28 @@ async function addMovie(movie) {
   }
 }
 
+async function addListOfMovies(movies) {
+  try {
+    movies.map(async (movie) => {
+      const newMovie = {
+        title: movie.title,
+        originalTitle: movie.original_title,
+        originalTitleRomanised: movie.original_title_romanised,
+        imageUrl: movie.image,
+        director: movie.director,
+        producer: movie.producer,
+        runningTime: movie.running_time,
+        rtScore: movie.rt_score,
+        wikiUrl: `https://ghibli.fandom.com/wiki/${movie.title.replaceAll(' ', '_')}`,
+        releaseDate: movie.release_date,
+      };
+      await addMovie(newMovie);
+    });
+  } catch (error) {
+    throw ('No se pudieron obtener los datos');
+  }
+}
+
 async function listMovies() {
   try {
     return await getMovies();
@@ -82,6 +104,7 @@ async function getMovie(userID, movieID) {
 export {
   listMovies,
   addMovie,
+  addListOfMovies,
   likeMovie,
   getMovie,
 };

@@ -84,13 +84,11 @@ async function updateUser(updatedUser, password, profilePic) {
     }
 
     if (profilePic) {
-
       if (process.env.NODE_ENV === 'development') {
         profilePicUrl = `http://${process.env.HOST}:${process.env.PORT}/app/files/${profilePic.filename}`;
       } else {
         profilePicUrl = `https://${process.env.HOST}/app/files/${profilePic.filename}`;
       }
-      
     }
 
     const data = {

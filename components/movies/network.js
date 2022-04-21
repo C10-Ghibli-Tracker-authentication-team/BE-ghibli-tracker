@@ -1,7 +1,7 @@
 import express from 'express';
 import { success, error as _error } from '../../network/response';
 import {
-  addMovie, getMovie, listMovies, likeMovie,
+  addMovie, getMovie, listMovies, likeMovie, addListOfMovies,
 } from './controller';
 
 const router = express.Router();
@@ -9,6 +9,15 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     await addMovie(req.body);
+    success(req, res, req.body, 201);
+  } catch (error) {
+    _error(req, res, error, 400);
+  }
+});
+
+router.post('/addList', async (req, res) => {
+  try {
+    await addListOfMovies(req.body);
     success(req, res, req.body, 201);
   } catch (error) {
     _error(req, res, error, 400);

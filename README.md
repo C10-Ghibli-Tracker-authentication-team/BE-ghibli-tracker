@@ -23,3 +23,11 @@ To run this project, you will need to add the following environment variables to
 `PORT` 
 
 `JWT_SECRET` 
+
+`FACEBOOK_APP_ID`
+
+`FACEBOOK_APP_SECRET` 
+
+`TWITTER_CONSUMER_KEY` 
+
+`TWITTER_CONSUMER_SECRET`

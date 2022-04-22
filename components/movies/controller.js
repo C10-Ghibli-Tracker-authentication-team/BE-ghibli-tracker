@@ -45,7 +45,7 @@ async function listMovies() {
   }
 }
 
-async function likeMovie(userID, movieID) {
+async function watchedMovie(userID, movieID) {
   try {
     const movie = await existMovie(movieID);
     if (!movie) {
@@ -105,6 +105,6 @@ export {
   listMovies,
   addMovie,
   addListOfMovies,
-  likeMovie,
+  watchedMovie,
   getMovie,
 };

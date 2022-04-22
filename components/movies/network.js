@@ -3,11 +3,13 @@ import { success, error as _error } from '../../network/response';
 import {
   addMovie, getMovie, listMovies, watchedMovie, addListOfMovies,
 } from './controller';
+import verifyEnvironment from '../../middleware/environment';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', verifyEnvironment, async (req, res) => {
   try {
+    console.log(req.body)
     await addMovie(req.body);
     success(req, res, req.body, 201);
   } catch (error) {
@@ -15,7 +17,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post('/addList', async (req, res) => {
+router.post('/addList',verifyEnvironment, async (req, res) => {
   try {
     await addListOfMovies(req.body);
     success(req, res, req.body, 201);

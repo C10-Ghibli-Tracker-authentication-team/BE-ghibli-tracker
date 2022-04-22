@@ -30,7 +30,7 @@ async function addListOfMovies(movies) {
         wikiUrl: `https://ghibli.fandom.com/wiki/${movie.title.replaceAll(' ', '_')}`,
         releaseDate: movie.release_date,
       };
-      await addMovie(newMovie);
+      await _addMovie(newMovie);
     });
   } catch (error) {
     throw ('No se pudieron obtener los datos');

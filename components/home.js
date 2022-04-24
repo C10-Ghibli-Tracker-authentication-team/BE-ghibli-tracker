@@ -1,10 +1,11 @@
 import express from 'express';
-import { success, error as _error } from '../../network/response';
+import { success, error as _error } from '../network/response';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.get('/', (req, res) => {
   try {
+    console.log("Hola")
     success(req, res, "Welcome to our API", 200);
   } catch (error) {
     console.log(error);

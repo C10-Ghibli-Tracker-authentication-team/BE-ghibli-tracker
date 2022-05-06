@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.post('/', verifyEnvironment, async (req, res) => {
   try {
-    console.log(req.body);
     await addMovie(req.body);
     success(req, res, req.body, 201);
   } catch (error) {

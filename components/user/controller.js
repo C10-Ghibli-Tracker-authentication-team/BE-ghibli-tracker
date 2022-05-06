@@ -1,6 +1,8 @@
 import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
-import { getUser, addUser as _addUser, updateUser as _updateUser, getUserById } from './store';
+import {
+  getUser, addUser as _addUser, updateUser as _updateUser, getUserById,
+} from './store';
 
 require('dotenv').config();
 
@@ -31,6 +33,7 @@ async function addUser(newUser) {
       userName: user.userName,
       email: user.email,
       profilePic: user.profilePic,
+      watchedMovies: user.watchedMovies.length,
       token,
     };
   } catch (error) {
@@ -81,15 +84,15 @@ async function findUser(userFind) {
 
 async function updateUser(userID, userData, profilePic) {
   try {
-    const userFind = await getUserById(userID)
+    const userFind = await getUserById(userID);
 
     let profilePicUrl = '';
     if (!userData.userName && !userData.newPassword && !profilePic) {
       throw ('No se ingresaron los datos correctos');
     }
 
-    if(userData.newPassword){
-      const valid = await compare(userData.oldPassword,userFind.password);
+    if (userData.newPassword) {
+      const valid = await compare(userData.oldPassword, userFind.password);
 
       if (!valid) {
         throw ('La contraseña no coincide');
@@ -105,7 +108,7 @@ async function updateUser(userID, userData, profilePic) {
     }
     // Creating object to update information in the actual user.
     const data = {
-      userName: userData.userName ? userData.userName : userFind.userName, 
+      userName: userData.userName ? userData.userName : userFind.userName,
       profilePic: profilePic ? profilePicUrl : userFind.profilePic,
       password: userData.newPassword ? await hash(userData.newPassword, 10) : userFind.password,
     };

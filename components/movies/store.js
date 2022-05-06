@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-const ObjectId = mongoose.Types.ObjectId;
 import Model from './model';
 
+const { ObjectId } = mongoose.Types;
 
 async function existMovie(movieID) {
   try {
@@ -25,8 +25,8 @@ async function addMovie(movie) {
 
 async function getMovies(movieID) {
   try {
-    var pipeline = []
-    if(movieID) pipeline.push({ $match: { _id: ObjectId(movieID) } })
+    const pipeline = [];
+    if (movieID) pipeline.push({ $match: { _id: ObjectId(movieID) } });
     pipeline.push(
       {
         $lookup: {
@@ -67,10 +67,10 @@ async function getMovies(movieID) {
       {
         $addFields: {
           avgEmojiScore: {
-            $cond: { if: { $isArray: '$emojiScores' }, then: { $avg: '$emojiScores.score' }, else: 0 }
+            $cond: { if: { $isArray: '$emojiScores' }, then: { $avg: '$emojiScores.score' }, else: 0 },
           },
           avgStarScore: {
-            $cond: { if: { $isArray: '$starScores' }, then: { $avg: '$starScores.score' }, else: 0 }
+            $cond: { if: { $isArray: '$starScores' }, then: { $avg: '$starScores.score' }, else: 0 },
           },
         },
       },
@@ -85,7 +85,7 @@ async function getMovies(movieID) {
           starScores: 0,
         },
       },
-    )
+    );
     return await Model.aggregate(pipeline);
   } catch (error) {
     throw ('Unexpected error');

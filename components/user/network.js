@@ -63,7 +63,6 @@ auth.post('/login', async (req, res) => {
 
 user.patch('/update', upload.single('profilePic'), async (req, res) => {
   try {
-    console.log(req.user._id, req.body, req.file)
     const data = await updateUser(req.user, req.body, req.file);
     success(req, res, data, 200);
   } catch (error) {

@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import Model from './model';
 
-async function addUser({ userName, email, password, profilePic }) {
+async function addUser({
+  userName, email, password, profilePic,
+}) {
   try {
     const user = {
       userName,

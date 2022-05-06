@@ -1,5 +1,5 @@
 import {
-  addMovie as _addMovie, getMovies, existMovie, 
+  addMovie as _addMovie, getMovies, existMovie,
 } from './store';
 import {
   hasWatched as _hasWatched, removeWatched, addWatched, getUserById,

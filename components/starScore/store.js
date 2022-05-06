@@ -29,7 +29,7 @@ async function addNewScore(starScore, user) {
           starScores: {
             ...newScore,
           },
-        }
+        },
       },
       {
         new: true,

@@ -117,6 +117,7 @@ async function updateUser(userID, userData, profilePic) {
       userName: user.userName,
       email: user.email,
       profilePic: user.profilePic,
+      watchedMovies: user.watchedMovies.length,
     };
   } catch (error) {
     console.log(error);

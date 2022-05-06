@@ -30,9 +30,6 @@ async function addNewScore(emojiScore, user) {
             ...newScore,
           },
         },
-        $inc: {
-          cantEmojiScore: 1,
-        },
       },
       {
         new: true,

@@ -17,7 +17,6 @@ const scoreSchema = new Schema({
       required: true,
     },
   }],
-  cantStarScore: Number,
 });
 
 const Model = mongoose.model('StarScore', scoreSchema);

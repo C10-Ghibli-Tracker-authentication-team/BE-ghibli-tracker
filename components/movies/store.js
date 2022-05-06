@@ -71,11 +71,11 @@ async function getMovies() {
       },
       {
         $addFields: {
-          totalEmojiScore: {
-            $sum: '$emojiScores.score',
+          avgEmojiScore: {
+            $cond: { if: { $isArray:'$emojiScores'}, then: {$avg: '$emojiScores.score'}, else: 0}
           },
-          totalStarScore: {
-            $sum: '$starScores.score',
+          avgStarScore: {
+            $cond: { if: { $isArray:'$starScores'}, then: {$avg: '$starScores.score'}, else: 0}
           },
         },
       },
@@ -88,7 +88,6 @@ async function getMovies() {
           __v: 0,
           starscore: 0,
           starScores: 0,
-
         },
       },
     ]);

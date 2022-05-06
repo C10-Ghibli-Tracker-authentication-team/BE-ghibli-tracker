@@ -29,10 +29,7 @@ async function addNewScore(starScore, user) {
           starScores: {
             ...newScore,
           },
-        },
-        $inc: {
-          cantStarScore: 1,
-        },
+        }
       },
       {
         new: true,

@@ -17,8 +17,6 @@ const scoreSchema = new Schema({
       required: true,
     },
   }],
-  totalEmojiScore: Number,
-  cantEmojiScore: Number,
 });
 
 const model = mongoose.model('EmojiScore', scoreSchema);

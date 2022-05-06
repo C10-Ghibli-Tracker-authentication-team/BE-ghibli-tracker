@@ -1,14 +1,7 @@
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
 import Model from './model';
 
-async function getMovieById(movieID) {
-  try {
-    const movie = await Model.findById(movieID);
-    return movie._doc;
-  } catch (error) {
-    console.log(error);
-    throw ('Unexpected error');
-  }
-}
 
 async function existMovie(movieID) {
   try {
@@ -30,9 +23,11 @@ async function addMovie(movie) {
   }
 }
 
-async function getMovies() {
+async function getMovies(movieID) {
   try {
-    return await Model.aggregate([
+    var pipeline = []
+    if(movieID) pipeline.push({ $match: { _id: ObjectId(movieID) } })
+    pipeline.push(
       {
         $lookup: {
           from: 'starscores',
@@ -72,10 +67,10 @@ async function getMovies() {
       {
         $addFields: {
           avgEmojiScore: {
-            $cond: { if: { $isArray:'$emojiScores'}, then: {$avg: '$emojiScores.score'}, else: 0}
+            $cond: { if: { $isArray: '$emojiScores' }, then: { $avg: '$emojiScores.score' }, else: 0 }
           },
           avgStarScore: {
-            $cond: { if: { $isArray:'$starScores'}, then: {$avg: '$starScores.score'}, else: 0}
+            $cond: { if: { $isArray: '$starScores' }, then: { $avg: '$starScores.score' }, else: 0 }
           },
         },
       },
@@ -90,7 +85,8 @@ async function getMovies() {
           starScores: 0,
         },
       },
-    ]);
+    )
+    return await Model.aggregate(pipeline);
   } catch (error) {
     throw ('Unexpected error');
   }
@@ -98,7 +94,6 @@ async function getMovies() {
 
 export {
   addMovie,
-  getMovieById,
   getMovies,
   existMovie,
 };

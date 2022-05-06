@@ -70,6 +70,7 @@ async function findUser(userFind) {
       userName: user.userName,
       email: user.email,
       profilePic: user.profilePic,
+      watchedMovies: user.watchedMovies.length,
       token,
     };
   } catch (error) {
@@ -156,6 +157,7 @@ async function findOrCreate(userFind) {
       userName: user.userName,
       email: user.email,
       profilePic: user.profilePic,
+      watchedMovies: user.watchedMovies.length,
       token,
     };
   } catch (error) {

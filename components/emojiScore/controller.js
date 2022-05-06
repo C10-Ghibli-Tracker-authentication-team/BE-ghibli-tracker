@@ -1,7 +1,7 @@
 import {
   hasEmojiScore as _hasEmojiScore, updateScore, addNewScore, getScoreByUser,
 } from './store';
-import { existMovie, getMovieById } from '../movies/store';
+import { existMovie, getMovies } from '../movies/store';
 import { getUserById } from '../user/store';
 import { getScoreByUser as _getScoreByUser } from '../starScore/store';
 
@@ -26,13 +26,13 @@ const addEmojiScore = async (score, user) => {
     const scoreStarFind = await _getScoreByUser(score.movieId, user._id);
     const scoreEmojiFind = await getScoreByUser(score.movieId, user._id);
 
-    const actualMovie = await getMovieById(score.movieId);
+    const actualMovie = await getMovies(score.movieId);
 
     return {
-      ...actualMovie,
+      ...actualMovie[0],
+      userStarScore: scoreStarFind,
+      userEmojiScore: scoreEmojiFind,
       watched: watchedMovies.includes(score.movieId),
-      starScore: scoreStarFind,
-      emojiScore: scoreEmojiFind,
     };
   } catch (error) {
     console.log(error);

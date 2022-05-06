@@ -1,5 +1,5 @@
 import {
-  addMovie as _addMovie, getMovies, existMovie, getMovieById,
+  addMovie as _addMovie, getMovies, existMovie, 
 } from './store';
 import {
   hasWatched as _hasWatched, removeWatched, addWatched, getUserById,
@@ -65,13 +65,13 @@ async function watchedMovie(userID, movieID) {
     const scoreStarFind = await getScoreByUser(movieID, userID);
     const scoreEmojiFind = await _getScoreByUser(movieID, userID);
 
-    const actualMovie = await getMovieById(movieID);
+    const actualMovie = await getMovies(movieID);
 
     return {
-      ...actualMovie,
+      ...actualMovie[0],
+      userStarScore: scoreStarFind,
+      userEmojiScore: scoreEmojiFind,
       watched: watchedMovies.includes(movieID),
-      starScore: scoreStarFind,
-      emojiScore: scoreEmojiFind,
     };
   } catch (error) {
     throw ('No se pudieron obtener los datos');
@@ -80,7 +80,7 @@ async function watchedMovie(userID, movieID) {
 
 async function getMovie(userID, movieID) {
   try {
-    const actualMovie = await getMovieById(movieID);
+    const actualMovie = await getMovies(movieID);
     if (!actualMovie) {
       throw (`No se encontro una pelicula con este id  ${movieID}`);
     }
@@ -91,10 +91,10 @@ async function getMovie(userID, movieID) {
     const scoreEmojiFind = await _getScoreByUser(movieID, userID);
 
     return {
-      ...actualMovie,
+      ...actualMovie[0],
+      userStarScore: scoreStarFind,
+      userEmojiScore: scoreEmojiFind,
       watched: watchedMovies.includes(movieID),
-      starScore: scoreStarFind,
-      emojiScore: scoreEmojiFind,
     };
   } catch (error) {
     console.log(error);

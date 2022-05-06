@@ -1,12 +1,12 @@
 import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
-import { getUser, addUser as _addUser, updateUser as _updateUser } from './store';
+import { getUser, addUser as _addUser, updateUser as _updateUser, getUserById } from './store';
 
 require('dotenv').config();
 
 async function addUser(newUser) {
   try {
-    if (!newUser.userName || !newUser.password) {
+    if (!newUser.userName || !newUser.password || !newUser.email) {
       throw ('No se ingresaron los datos correctos');
     }
 
@@ -29,6 +29,7 @@ async function addUser(newUser) {
     return {
       _id: user._id,
       userName: user.userName,
+      email: user.email,
       profilePic: user.profilePic,
       token,
     };
@@ -40,7 +41,7 @@ async function addUser(newUser) {
 
 async function findUser(userFind) {
   try {
-    if (!userFind.userName || !userFind.password) {
+    if (!userFind.email || !userFind.password) {
       throw ('No se ingresaron los datos correctos');
     }
 
@@ -67,6 +68,7 @@ async function findUser(userFind) {
     return {
       _id: user._id,
       userName: user.userName,
+      email: user.email,
       profilePic: user.profilePic,
       token,
     };
@@ -76,11 +78,21 @@ async function findUser(userFind) {
   }
 }
 
-async function updateUser(updatedUser, password, profilePic) {
+async function updateUser(userID, userData, profilePic) {
   try {
+    const userFind = await getUserById(userID)
+
     let profilePicUrl = '';
-    if (!profilePic && !password) {
+    if (!userData.userName && !userData.newPassword && !profilePic) {
       throw ('No se ingresaron los datos correctos');
+    }
+
+    if(userData.newPassword){
+      const valid = await compare(userData.oldPassword,userFind.password);
+
+      if (!valid) {
+        throw ('La contraseña no coincide');
+      }
     }
 
     if (profilePic) {
@@ -90,17 +102,19 @@ async function updateUser(updatedUser, password, profilePic) {
         profilePicUrl = `https://${process.env.HOST}/app/files/${profilePic.filename}`;
       }
     }
-
+    // Creating object to update information in the actual user.
     const data = {
-      profilePic: profilePicUrl || profilePic,
-      password: password ? await hash(password, 10) : password,
+      userName: userData.userName ? userData.userName : userFind.userName, 
+      profilePic: profilePic ? profilePicUrl : userFind.profilePic,
+      password: userData.newPassword ? await hash(userData.newPassword, 10) : userFind.password,
     };
 
-    const user = await _updateUser(updatedUser, data);
+    const user = await _updateUser(userID, data);
     delete user._doc.password;
     return {
       _id: user._id,
       userName: user.userName,
+      email: user.email,
       profilePic: user.profilePic,
     };
   } catch (error) {
@@ -111,13 +125,19 @@ async function updateUser(updatedUser, password, profilePic) {
 
 async function findOrCreate(userFind) {
   try {
-    let user = await getUser({ userName: userFind.email });
+    let user = await getUser(userFind);
     if (!user) {
-      const newUser = {
-        userName: userFind.email,
-        profilePic: userFind.picture.data.url,
-      };
-      user = await _addUser(newUser);
+      try {
+        const newUser = {
+          userName: userFind.name,
+          email: userFind.email,
+          profilePic: userFind.picture.data.url,
+        };
+        user = await _addUser(newUser);
+      } catch (error) {
+        console.log(error);
+        throw ('No se pudo obtener los suficientes datos');
+      }
     }
 
     if (user.password) {
@@ -134,6 +154,7 @@ async function findOrCreate(userFind) {
     return {
       _id: user._id,
       userName: user.userName,
+      email: user.email,
       profilePic: user.profilePic,
       token,
     };

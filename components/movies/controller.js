@@ -21,6 +21,7 @@ async function addListOfMovies(movies) {
       const newMovie = {
         title: movie.title,
         originalTitle: movie.original_title,
+        description: movie.description,
         originalTitleRomanised: movie.original_title_romanised,
         imageUrl: movie.image,
         director: movie.director,

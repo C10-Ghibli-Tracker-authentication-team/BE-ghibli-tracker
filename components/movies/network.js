@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/', verifyEnvironment, async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     await addMovie(req.body);
     success(req, res, req.body, 201);
   } catch (error) {
@@ -17,7 +17,7 @@ router.post('/', verifyEnvironment, async (req, res) => {
   }
 });
 
-router.post('/addList',verifyEnvironment, async (req, res) => {
+router.post('/addList', verifyEnvironment, async (req, res) => {
   try {
     await addListOfMovies(req.body);
     success(req, res, req.body, 201);

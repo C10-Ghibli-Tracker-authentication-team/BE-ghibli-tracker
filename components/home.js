@@ -5,8 +5,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   try {
-    console.log("Hola")
-    success(req, res, "Welcome to our API", 200);
+    success(req, res, 'Welcome to our API', 200);
   } catch (error) {
     console.log(error);
     _error(req, res, error, 400);

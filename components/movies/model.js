@@ -7,6 +7,10 @@ const movieSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   originalTitle: {
     type: String,
     required: true,

@@ -7,12 +7,10 @@ function verifyEnvironment(req, res, next) {
     return _error(req, res, 'No tiene acceso a este endpoint', 400, 'Especifice en que entorno se encuentra');
   }
 
-  if (env === "development") {
+  if (env === 'development') {
     return next();
-  }else{
-    return _error(req, res, 'No tiene acceso a este endpoint', 400, 'Solo se puede hacer en desarrollo');
   }
-  
+  return _error(req, res, 'No tiene acceso a este endpoint', 400, 'Solo se puede hacer en desarrollo');
 }
 
 export default verifyEnvironment;

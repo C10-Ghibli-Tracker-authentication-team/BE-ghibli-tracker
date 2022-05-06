@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt';
 import Model from './model';
 
-async function addUser({ userName, password, profilePic }) {
+async function addUser({ userName, email, password, profilePic }) {
   try {
     const user = {
       userName,
+      email,
       password: password && await bcrypt.hash(password, 10),
       profilePic: profilePic || `${process.env.HOST}:${process.env.PORT}/app/files/default_image.jpeg`,
     };
@@ -16,9 +17,9 @@ async function addUser({ userName, password, profilePic }) {
   }
 }
 
-async function getUser({ userName }) {
+async function getUser({ email }) {
   try {
-    return await Model.findOne({ userName }).exec();
+    return await Model.findOne({ email }).exec();
   } catch (error) {
     console.log(error);
     throw ('Unexpected error');
@@ -35,11 +36,11 @@ async function getUserById(userID) {
   }
 }
 
-async function updateUser(user, data) {
+async function updateUser(userID, data) {
   try {
     const updatedUser = await Model.findOneAndUpdate(
       {
-        _id: user._id,
+        _id: userID,
       },
       {
         $set: data,

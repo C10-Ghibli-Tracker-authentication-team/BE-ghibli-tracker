@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { json, urlencoded } from 'body-parser';
 import passport from 'passport';
 import db from './db';
@@ -11,6 +12,7 @@ require('dotenv').config();
 db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.qoymy.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
 const app = express();
 app.use(json());
+app.use(cors());
 app.use(urlencoded({ extended: false }));
 app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 

@@ -7,7 +7,8 @@ import './utils/strategies';
 
 require('dotenv').config();
 
-db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.v65cq.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
+//db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.v65cq.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
+db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.qoymy.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
 const app = express();
 app.use(json());
 app.use(urlencoded({ extended: false }));

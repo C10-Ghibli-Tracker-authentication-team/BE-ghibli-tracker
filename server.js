@@ -1,16 +1,26 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import cors from 'cors';
+import { json, urlencoded } from 'body-parser';
+import passport from 'passport';
+import db from './db';
+import router from './network/routes';
+import './utils/strategies';
 
-const router = require('./network/routes');
+require('dotenv').config();
 
-var app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-//app.use(router);
+//db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.v65cq.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
+db(`mongodb+srv://${process.env.MONGOATLAS_USER}:${process.env.MONGOATLAS_PASSWORD}@cluster0.qoymy.mongodb.net/${process.env.MONGOATLAS_APPNAME}?retryWrites=true&w=majority`);
+const app = express();
+app.use(json());
+app.use(cors());
+app.use(urlencoded({ extended: false }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 router(app);
 
-app.use('/app', express.static('public'));   //servir estáticos desde la carpeta public
+app.use('/app', express.static('public')); // servir estáticos desde la carpeta public
 
-app.listen(3000);
-console.log('La aplicacion esta escuchando en el puerto 3000');
+app.listen(process.env.PORT);
+console.log(`La aplicacion esta escuchando en el puerto ${process.env.PORT}`);
